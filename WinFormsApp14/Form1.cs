@@ -28,7 +28,7 @@ namespace WinFormsApp14
             GenerateRandomNumber();
 
         }
-       // Button reset
+        // Button reset
         private void button2_Click(object sender, EventArgs e)
         {
             generatedNumbers.Clear();
@@ -42,7 +42,7 @@ namespace WinFormsApp14
 
             richTextBox1.Clear();
             // สุ่มตัวเลข 0-60000
-            int randomNumber = random.Next(0, 60001);
+            int randomNumber = random.Next(0, 10);
 
             // เช็คว่าตัวเลขที่สุ่มมีอยู่ใน List แล้วหรือไม่
             if (generatedNumbers.Contains(randomNumber))
@@ -75,18 +75,26 @@ namespace WinFormsApp14
             // นับจำนวนตัวเลขทั้งหมดใน List
             int count = generatedNumbers.Count;
 
-            // นับจำนวนตัวเลขที่ต้องแสดงใน DataGridView
-            int start = Math.Max(0, count - 100);
-            // int end = count;
+           
 
             // เพิ่มแถวใน DataGridView สำหรับตัวเลขที่ต้องแสดง
-            for (int i = start; i < generatedNumbers.Count; i++)
+            for (int i = 0; i < generatedNumbers.Count; i++)
             {
 
-                dataGridView1.Rows.Add(i, generatedNumbers[i]);
 
+                //สำหรับโชวค่า NG เมื่อมีตัวซ้ำกัน(ยกเว้นตัวแรก จะไม่ขึ้น NG ) เช่น 1 2 3 1(NG)
+                int currentNumber = generatedNumbers[i];
+                bool isDuplicate = generatedNumbers.IndexOf(currentNumber) < i; //ใช้ IndexOf เพื่อหาตำแหน่งแรกที่ currentNumber ปรากฏใน generatedNumbers. ถ้าตำแหน่งที่พบน้อยกว่า i, นั่นหมายความว่า currentNumber มีค่าที่ซ้ำกับตัวเลขที่อยู่ในรอบแรกของลูป, และ isDuplicate จะถูกตั้งค่าเป็น true.
 
+                // เพิ่มแถวใน DataGridView
+                dataGridView1.Rows.Add(i, currentNumber, isDuplicate ? "NG" : "");
 
+                /* สำหรับโชวค่า NG เมื่อมีตัวซ้ำกัน เช่น 1(NG) 2 3 1(NG)
+                int currentNumber = generatedNumbers[i];
+                int ngCount = generatedNumbers.FindAll(n => n == currentNumber).Count;
+                // เพิ่มแถวใน DataGridView
+                dataGridView1.Rows.Add(i, currentNumber, ngCount > 1 ? "NG" : "");
+                */
             }
             // ตั้งค่าเลื่อน ScrollBar ไปยังค่าล่าสุด
             if (dataGridView1.Rows.Count > 0)
